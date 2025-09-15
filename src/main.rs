@@ -7,6 +7,7 @@ use clap::Parser;
 
 mod lexer;
 mod error;
+mod syntax_tree;
 
 
 #[derive(Parser)]
