@@ -1,3 +1,4 @@
+
 use std::sync::Arc;
 
 
@@ -45,7 +46,7 @@ pub fn generate_lexing_token_stream(file_content: Arc<String>) -> Vec<LexingToke
             let constructed_number: &str = file_content.get(current_char_index..end_of_num_index).unwrap();
 
             constructed_lexing_token_stream.push(
-                LexingToken::Number(file_content.get(current_char_index..end_of_num_index).unwrap().parse().unwrap())
+                LexingToken::Number(constructed_number.parse().unwrap())
             );
 
             current_char_index = end_of_num_index-1;
