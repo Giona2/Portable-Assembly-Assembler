@@ -6,7 +6,7 @@ use crate::lexer::{
 };
 
 
-pub fn generate_syntax_tree(lexing_token_stream: Vec<LexingToken>) -> Vec<SyntaxTreeToken> {
+pub fn generate_syntax_tree(lexing_token_stream: &[LexingToken]) -> Vec<SyntaxTreeToken> {
     let mut constructed_syntax_tree: Vec<SyntaxTreeToken> = Vec::new();
 
     let mut current_token_index: usize = 0;
@@ -90,12 +90,12 @@ pub fn generate_syntax_tree(lexing_token_stream: Vec<LexingToken>) -> Vec<Syntax
 }
 
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub enum SyntaxTreeToken {
     Instruction(Instruction)
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub enum Instruction {
     STT,
     NEW(i8),

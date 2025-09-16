@@ -5,6 +5,7 @@ use std::{
 
 use clap::Parser;
 
+mod assembler;
 mod lexer;
 mod error;
 mod syntax_tree;
@@ -24,9 +25,13 @@ fn main() {
     // Open the given soruce file
     let file_content: String = fs::read_to_string(cmd_args.target_file_path).unwrap();
 
+    // Construct the token stream
     let token_stream: Vec<lexer::LexingToken> = lexer::generate_lexing_token_stream(Arc::new(file_content));
     println!("{:?}", token_stream);
 
-    let syntax_tree: Vec<syntax_tree::SyntaxTreeToken> = syntax_tree::generate_syntax_tree(token_stream.clone());
+    // Construct the syntax tree
+    let syntax_tree: Vec<syntax_tree::SyntaxTreeToken> = syntax_tree::generate_syntax_tree(&token_stream);
     println!("{:?}", syntax_tree);
+
+    // Assemble the program
 }
