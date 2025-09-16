@@ -1,6 +1,6 @@
 use crate::syntax_tree::{
     SyntaxTreeToken, Instruction
-}
+};
 
 
 pub fn generate_binary(syntax_tree: &[SyntaxTreeToken]) -> Vec<u8> {
@@ -18,13 +18,46 @@ pub fn generate_binary(syntax_tree: &[SyntaxTreeToken]) -> Vec<u8> {
             }
 
             Instruction::SET(index, value) => {
+                // Generate the insruction
                 constructed_binary.push(translate_instruction(instruction));
+
+                // Generate the index
                 constructed_binary.push(index as u8);
+
+                let value_bytes = value.to_ne_bytes();
+                for byte in value_bytes { constructed_binary.push(byte); }
+            }
+
+            Instruction::DRP(index) => {
+                constructed_binary.push(translate_instruction(instruction));
+
+                constructed_binary.push(index as u8);
+            }
+
+            Instruction::LOD(index) => {
+                constructed_binary.push(translate_instruction(instruction));
+
+                constructed_binary.push(index as u8);
+            }
+
+            Instruction::RET => {
+                constructed_binary.push(translate_instruction(instruction));
+            }
+
+            Instruction::END => {
+                constructed_binary.push(translate_instruction(instruction));
+            }
+
+            Instruction::ADD(value) => {
+                constructed_binary.push(translate_instruction(instruction));
+
+                let value_bytes = value.to_ne_bytes();
+                for byte in value_bytes { constructed_binary.push(byte); }
             }
         }}
     }}
 
-    todo!()
+    return constructed_binary;
 }
 
 

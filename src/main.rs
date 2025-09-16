@@ -34,4 +34,6 @@ fn main() {
     println!("{:?}", syntax_tree);
 
     // Assemble the program
+    let binary: Vec<u8> = assembler::generate_binary(&syntax_tree);
+    println!("{:?}", binary);
 }
