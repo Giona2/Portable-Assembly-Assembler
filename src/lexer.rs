@@ -35,6 +35,10 @@ pub fn generate_lexing_token_stream(file_content: Arc<String>) -> Vec<LexingToke
             constructed_lexing_token_stream.push(LexingToken::Instruction(LexingTokenInstruction::END));
             current_char_index += LexingTokenInstruction::END.get_kwrd().len()-1;
         }
+        else if LexingTokenInstruction::ADD.kwrd_is_found_here(file_content.clone(), current_char_index) {
+            constructed_lexing_token_stream.push(LexingToken::Instruction(LexingTokenInstruction::ADD));
+            current_char_index += LexingTokenInstruction::ADD.get_kwrd().len()-1;
+        }
         else if let Ok(_) = current_char.parse::<usize>() {
             let mut end_of_num_index = current_char_index;
 
@@ -63,15 +67,47 @@ pub fn generate_lexing_token_stream(file_content: Arc<String>) -> Vec<LexingToke
     return constructed_lexing_token_stream;
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub enum LexingToken {
     Instruction(LexingTokenInstruction),
     Number(usize),
     ArgSeperator,
     EndOfInstruction,
+} impl LexingToken {
+    pub fn get_instruction(self) -> Option<LexingTokenInstruction> {
+        if let LexingToken::Instruction(instruction) = self {
+            return Some(instruction)
+        } else {
+            return None
+        }
+    }
+
+    pub fn get_number(self) -> Option<usize> {
+        if let LexingToken::Number(number) = self {
+            return Some(number)
+        } else {
+            return None
+        }
+    }
+
+    pub fn get_arg_seperator(self) -> Option<()> {
+        if let LexingToken::ArgSeperator = self {
+            return Some(())
+        } else {
+            return None
+        }
+    }
+
+    pub fn get_end_of_instruction(self) -> Option<()> {
+        if let LexingToken::EndOfInstruction = self {
+            return Some(())
+        } else {
+            return None
+        }
+    }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub enum LexingTokenInstruction {
     STT,
     NEW,
@@ -80,6 +116,7 @@ pub enum LexingTokenInstruction {
     LOD,
     RET,
     END,
+    ADD,
 } impl LexingTokenInstruction {
     pub fn get_kwrd(&self) -> String { match self {
         LexingTokenInstruction::STT => String::from("stt"),
@@ -89,6 +126,8 @@ pub enum LexingTokenInstruction {
         LexingTokenInstruction::LOD => String::from("lod"),
         LexingTokenInstruction::RET => String::from("ret"),
         LexingTokenInstruction::END => String::from("end"),
+
+        LexingTokenInstruction::ADD => String::from("add"),
     }}
 
     pub fn kwrd_is_found_here(&self, file_content: Arc<String>, current_char_index: usize) -> bool {

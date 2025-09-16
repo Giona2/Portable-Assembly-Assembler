@@ -25,6 +25,8 @@ fn main() {
     let file_content: String = fs::read_to_string(cmd_args.target_file_path).unwrap();
 
     let token_stream: Vec<lexer::LexingToken> = lexer::generate_lexing_token_stream(Arc::new(file_content));
-
     println!("{:?}", token_stream);
+
+    let syntax_tree: Vec<syntax_tree::SyntaxTreeToken> = syntax_tree::generate_syntax_tree(token_stream.clone());
+    println!("{:?}", syntax_tree);
 }
