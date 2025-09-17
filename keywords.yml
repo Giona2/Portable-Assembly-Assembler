@@ -1,0 +1,24 @@
+stt:
+  enum: LexingTokenInstruction
+  branch: 0
+new:
+  enum: LexingTokenInstruction
+  branch: 1
+set:
+  enum: LexingTokenInstruction
+  branch: 2
+drp:
+  enum: LexingTokenInstruction
+  branch: 3
+lod:
+  enum: LexingTokenInstruction
+  branch: 4
+ret:
+  enum: LexingTokenInstruction
+  branch: 5
+end:
+  enum: LexingTokenInstruction
+  branch: 6
+add:
+  enum: LexingTokenInstruction
+  branch: 7

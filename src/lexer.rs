@@ -109,14 +109,14 @@ pub enum LexingToken {
 
 #[derive(Debug, Clone, Copy)]
 pub enum LexingTokenInstruction {
-    STT,
-    NEW,
-    SET,
-    DRP,
-    LOD,
-    RET,
-    END,
-    ADD,
+    STT = 0,
+    NEW = 1,
+    SET = 2,
+    DRP = 3,
+    LOD = 4,
+    RET = 5,
+    END = 6,
+    ADD = 7,
 } impl LexingTokenInstruction {
     pub fn get_kwrd(&self) -> String { match self {
         LexingTokenInstruction::STT => String::from("stt"),
