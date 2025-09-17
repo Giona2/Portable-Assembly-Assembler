@@ -5,10 +5,12 @@ use std::{
 
 use clap::Parser;
 
-mod assembler;
+use crate::lexer::LexingToken;
+
+//mod assembler;
 mod lexer;
-mod error;
-mod syntax_tree;
+//mod error;
+//mod syntax_tree;
 
 
 #[derive(Parser)]
@@ -27,13 +29,10 @@ fn main() {
 
     // Construct the token stream
     let token_stream: Vec<lexer::LexingToken> = lexer::generate_lexing_token_stream(Arc::new(file_content));
-    println!("{:?}", token_stream);
-
-    // Construct the syntax tree
-    let syntax_tree: Vec<syntax_tree::SyntaxTreeToken> = syntax_tree::generate_syntax_tree(&token_stream);
-    println!("{:?}", syntax_tree);
-
-    // Assemble the program
-    let binary: Vec<u8> = assembler::generate_binary(&syntax_tree);
-    println!("{:?}", binary);
+    for token in token_stream {
+        print!("{:?} ", token);
+        if token == LexingToken::EndOfInstruction {
+            println!("\n");
+        }
+    }
 }

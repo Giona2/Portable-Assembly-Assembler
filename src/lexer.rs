@@ -1,64 +1,62 @@
 use std::sync::Arc;
 
+use indexmap::{indexmap, IndexMap};
+use serde::Deserialize;
+
+pub fn get_keywords() -> IndexMap<&'static str, LexingToken> { return indexmap! {
+    "stt" => LexingToken::VariableInstruction(LexingTokenVariableInstruction::STT),
+    "set" => LexingToken::VariableInstruction(LexingTokenVariableInstruction::SET),
+    "lod" => LexingToken::VariableInstruction(LexingTokenVariableInstruction::LOD),
+    "ret" => LexingToken::VariableInstruction(LexingTokenVariableInstruction::RET),
+    "end" => LexingToken::VariableInstruction(LexingTokenVariableInstruction::END),
+
+    "," => LexingToken::ArgSeperator,
+
+    "\n" => LexingToken::EndOfInstruction,
+
+    "!" => LexingToken::OperatingSizeDenotator(OperatingSizeDenotator::Direct),
+    "f" => LexingToken::OperatingSizeDenotator(OperatingSizeDenotator::Float),
+    "*" => LexingToken::OperatingSizeDenotator(OperatingSizeDenotator::Pointer),
+}}
+
+
+#[derive(Debug, Deserialize, Clone)]
+struct KeywordConfig {
+    enum_type: String,
+    branch: i8,
+}
+
 
 pub fn generate_lexing_token_stream(file_content: Arc<String>) -> Vec<LexingToken> {
     let mut constructed_lexing_token_stream: Vec<LexingToken> = Vec::new();
 
     let mut current_char_index: usize = 0;
 
-    while current_char_index < file_content.clone().len() { let current_char = file_content.get(current_char_index..=current_char_index).unwrap();
-        if      LexingTokenInstruction::STT.kwrd_is_found_here(file_content.clone(), current_char_index) {
-            constructed_lexing_token_stream.push(LexingToken::Instruction(LexingTokenInstruction::STT));
-            current_char_index += LexingTokenInstruction::STT.get_kwrd().len()-1;
-        }
-        else if LexingTokenInstruction::NEW.kwrd_is_found_here(file_content.clone(), current_char_index) {
-            constructed_lexing_token_stream.push(LexingToken::Instruction(LexingTokenInstruction::NEW));
-            current_char_index += LexingTokenInstruction::NEW.get_kwrd().len()-1;
-        }
-        else if LexingTokenInstruction::SET.kwrd_is_found_here(file_content.clone(), current_char_index) {
-            constructed_lexing_token_stream.push(LexingToken::Instruction(LexingTokenInstruction::SET));
-            current_char_index += LexingTokenInstruction::SET.get_kwrd().len()-1;
-        }
-        else if LexingTokenInstruction::DRP.kwrd_is_found_here(file_content.clone(), current_char_index) {
-            constructed_lexing_token_stream.push(LexingToken::Instruction(LexingTokenInstruction::DRP));
-            current_char_index += LexingTokenInstruction::DRP.get_kwrd().len()-1;
-        }
-        else if LexingTokenInstruction::LOD.kwrd_is_found_here(file_content.clone(), current_char_index) {
-            constructed_lexing_token_stream.push(LexingToken::Instruction(LexingTokenInstruction::LOD));
-            current_char_index += LexingTokenInstruction::LOD.get_kwrd().len()-1;
-        }
-        else if LexingTokenInstruction::RET.kwrd_is_found_here(file_content.clone(), current_char_index) {
-            constructed_lexing_token_stream.push(LexingToken::Instruction(LexingTokenInstruction::RET));
-            current_char_index += LexingTokenInstruction::RET.get_kwrd().len()-1;
-        }
-        else if LexingTokenInstruction::END.kwrd_is_found_here(file_content.clone(), current_char_index) {
-            constructed_lexing_token_stream.push(LexingToken::Instruction(LexingTokenInstruction::END));
-            current_char_index += LexingTokenInstruction::END.get_kwrd().len()-1;
-        }
-        else if LexingTokenInstruction::ADD.kwrd_is_found_here(file_content.clone(), current_char_index) {
-            constructed_lexing_token_stream.push(LexingToken::Instruction(LexingTokenInstruction::ADD));
-            current_char_index += LexingTokenInstruction::ADD.get_kwrd().len()-1;
-        }
-        else if let Ok(_) = current_char.parse::<usize>() {
-            let mut end_of_num_index = current_char_index;
-
-            while let Ok(_) = file_content.get(current_char_index..=end_of_num_index).unwrap().parse::<usize>() {
-                end_of_num_index += 1;
+    while current_char_index < file_content.clone().len() {
+        // Check if this character is a number
+        if let Ok(_) = file_content.get(current_char_index..=current_char_index).unwrap().parse::<u8>() {
+            // find the last digit
+            let mut last_digit_index = current_char_index;
+            while let Ok(_) = file_content.get(last_digit_index+1..=last_digit_index+1).unwrap().parse::<u8>() {
+                last_digit_index += 1;
             }
 
-            let constructed_number: &str = file_content.get(current_char_index..end_of_num_index).unwrap();
+            // construct the number token
+            let full_number = String::from(file_content.get(current_char_index..=last_digit_index).unwrap());
+            constructed_lexing_token_stream.push(LexingToken::Number(full_number));
 
-            constructed_lexing_token_stream.push(
-                LexingToken::Number(constructed_number.parse().unwrap())
-            );
+            // Move the last digit to the end of the number
+            current_char_index = last_digit_index;
+        }
 
-            current_char_index = end_of_num_index-1;
-        }
-        else if current_char == "," {
-            constructed_lexing_token_stream.push(LexingToken::ArgSeperator);
-        }
-        else if current_char == "\n" {
-            constructed_lexing_token_stream.push(LexingToken::EndOfInstruction);
+        // Search for the keyword
+        for (keyword, keyword_type) in get_keywords().iter() {
+            if let Some(slice) = file_content.get(current_char_index..current_char_index+keyword.len()) {
+                if slice == *keyword {
+                    constructed_lexing_token_stream.push(keyword_type.clone());
+
+                }
+            }
         }
 
         current_char_index += 1;
@@ -67,76 +65,27 @@ pub fn generate_lexing_token_stream(file_content: Arc<String>) -> Vec<LexingToke
     return constructed_lexing_token_stream;
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(PartialEq, Debug, Clone)]
 pub enum LexingToken {
-    Instruction(LexingTokenInstruction),
-    Number(usize),
+    VariableInstruction(LexingTokenVariableInstruction),
+    Number(String),
     ArgSeperator,
     EndOfInstruction,
-} impl LexingToken {
-    pub fn get_instruction(self) -> Option<LexingTokenInstruction> {
-        if let LexingToken::Instruction(instruction) = self {
-            return Some(instruction)
-        } else {
-            return None
-        }
-    }
-
-    pub fn get_number(self) -> Option<usize> {
-        if let LexingToken::Number(number) = self {
-            return Some(number)
-        } else {
-            return None
-        }
-    }
-
-    pub fn get_arg_seperator(self) -> Option<()> {
-        if let LexingToken::ArgSeperator = self {
-            return Some(())
-        } else {
-            return None
-        }
-    }
-
-    pub fn get_end_of_instruction(self) -> Option<()> {
-        if let LexingToken::EndOfInstruction = self {
-            return Some(())
-        } else {
-            return None
-        }
-    }
+    OperatingSizeDenotator(OperatingSizeDenotator)
 }
 
-#[derive(Debug, Clone, Copy)]
-pub enum LexingTokenInstruction {
+#[derive(PartialEq, Debug, Clone)]
+pub enum OperatingSizeDenotator {
+    Direct,
+    Float,
+    Pointer,
+}
+
+#[derive(PartialEq, Debug, Clone, Copy)]
+pub enum LexingTokenVariableInstruction {
     STT = 0,
-    NEW = 1,
-    SET = 2,
-    DRP = 3,
-    LOD = 4,
-    RET = 5,
-    END = 6,
-    ADD = 7,
-} impl LexingTokenInstruction {
-    pub fn get_kwrd(&self) -> String { match self {
-        LexingTokenInstruction::STT => String::from("stt"),
-        LexingTokenInstruction::NEW => String::from("new"),
-        LexingTokenInstruction::SET => String::from("set"),
-        LexingTokenInstruction::DRP => String::from("drp"),
-        LexingTokenInstruction::LOD => String::from("lod"),
-        LexingTokenInstruction::RET => String::from("ret"),
-        LexingTokenInstruction::END => String::from("end"),
-
-        LexingTokenInstruction::ADD => String::from("add"),
-    }}
-
-    pub fn kwrd_is_found_here(&self, file_content: Arc<String>, current_char_index: usize) -> bool {
-        let target_kwrd = self.get_kwrd();
-
-        if let Some(selected_text) = file_content.get(current_char_index..(current_char_index+target_kwrd.len())) {
-            if selected_text == target_kwrd { return true }
-        }
-
-        return false
-    }
+    SET = 1,
+    LOD = 2,
+    RET = 3,
+    END = 4,
 }
