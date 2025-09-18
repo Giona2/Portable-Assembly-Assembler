@@ -10,13 +10,13 @@ mod types;
     use types::*;
 
 
-pub fn generate_syntax_tree(lexing_token_stream: &[lexer::LexingToken]) -> Vec<SyntaxTreeToken> {
+pub fn generate_syntax_tree(lexing_token_stream: &[lexer::tokens::LexingToken]) -> Vec<SyntaxTreeToken> {
     let mut constructed_syntax_tree: Vec<SyntaxTreeToken> = Vec::new();
 
     let mut current_token_index: usize = 0;
     while current_token_index < lexing_token_stream.len() { match &lexing_token_stream[current_token_index] {
-        lexer::LexingToken::VariableInstruction(instruction) => { match instruction {
-            lexer::VariableInstruction::STT => {
+        lexer::tokens::LexingToken::VariableInstruction(instruction) => { match instruction {
+            lexer::tokens::VariableInstruction::STT => {
                 // Get the var frame size
                 current_token_index += 1;
                 let var_frame_size: i16 = lexing_token_stream[current_token_index].to_number().unwrap()
@@ -30,7 +30,7 @@ pub fn generate_syntax_tree(lexing_token_stream: &[lexer::LexingToken]) -> Vec<S
                 constructed_syntax_tree.push(SyntaxTreeToken::VariableInstruction(VariableInstruction::STT(var_frame_size)));
             }
 
-            lexer::VariableInstruction::SET => {
+            lexer::tokens::VariableInstruction::SET => {
                 // Get the denotations
                 current_token_index += 1;
                 let mut operator_config = get_denotations_here(lexing_token_stream, &mut current_token_index);
@@ -66,7 +66,7 @@ pub fn generate_syntax_tree(lexing_token_stream: &[lexer::LexingToken]) -> Vec<S
                 constructed_syntax_tree.push(SyntaxTreeToken::VariableInstruction(constructed_token));
             }
 
-            lexer::VariableInstruction::LOD => {
+            lexer::tokens::VariableInstruction::LOD => {
                 // Get the denotations
                 current_token_index += 1;
                 let mut operator_config = get_denotations_here(lexing_token_stream, &mut current_token_index);
@@ -93,7 +93,7 @@ pub fn generate_syntax_tree(lexing_token_stream: &[lexer::LexingToken]) -> Vec<S
                 constructed_syntax_tree.push(SyntaxTreeToken::VariableInstruction(constructed_token));
             }
 
-            lexer::VariableInstruction::RET => {
+            lexer::tokens::VariableInstruction::RET => {
                 // Get the donominations
                 current_token_index += 1;
                 let mut operator_config = get_denotations_here(lexing_token_stream, &mut current_token_index);
@@ -121,11 +121,21 @@ pub fn generate_syntax_tree(lexing_token_stream: &[lexer::LexingToken]) -> Vec<S
                 constructed_syntax_tree.push(SyntaxTreeToken::VariableInstruction(constructed_token));
             }
 
+            lexer::tokens::VariableInstruction::END => {
+                // Get EOI
+                current_token_index += 1;
+                look_for_eoi(lexing_token_stream, &current_token_index);
+
+                // Construct the token
+                let constructed_token = VariableInstruction::END;
+                constructed_syntax_tree.push(SyntaxTreeToken::VariableInstruction(constructed_token));
+            }
+
             _ => {}
         }}
 
-        lexer::LexingToken::ArithmeticInstruction(instruction) => { match instruction {
-            lexer::ArithmeticInstruction::ADD => {
+        lexer::tokens::LexingToken::ArithmeticInstruction(instruction) => { match instruction {
+            lexer::tokens::ArithmeticInstruction::ADD => {
                 // Get the operation config
                 current_token_index += 1;
                 let mut operator_config = get_denotations_here(lexing_token_stream, &mut current_token_index);

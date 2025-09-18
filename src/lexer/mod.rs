@@ -1,7 +1,9 @@
 use std::sync::Arc;
 
 use indexmap::{indexmap, IndexMap};
-use serde::Deserialize;
+
+pub mod tokens;
+    use tokens::*;
 
 pub fn get_keywords() -> IndexMap<&'static str, LexingToken> { return indexmap! {
     "stt" => LexingToken::VariableInstruction(VariableInstruction::STT),
@@ -20,13 +22,6 @@ pub fn get_keywords() -> IndexMap<&'static str, LexingToken> { return indexmap! 
     "f" => LexingToken::OperatingSizeDenotator(OperationSizeDenotation::Float),
     "*" => LexingToken::OperatingSizeDenotator(OperationSizeDenotation::Pointer),
 }}
-
-
-#[derive(Debug, Deserialize, Clone)]
-struct KeywordConfig {
-    enum_type: String,
-    branch: i8,
-}
 
 
 pub fn generate_lexing_token_stream(file_content: Arc<String>) -> Vec<LexingToken> {
@@ -65,51 +60,4 @@ pub fn generate_lexing_token_stream(file_content: Arc<String>) -> Vec<LexingToke
     }
 
     return constructed_lexing_token_stream;
-}
-
-#[derive(PartialEq, Debug, Clone)]
-pub enum LexingToken {
-    VariableInstruction(VariableInstruction),
-    ArithmeticInstruction(ArithmeticInstruction),
-    Number(String),
-    ArgSeperator,
-    EndOfInstruction,
-    OperatingSizeDenotator(OperationSizeDenotation)
-} impl LexingToken {
-    pub fn to_number(&self) -> Option<String> {
-        if let Self::Number(number) = self {
-            return Some(number.clone())
-        } else {
-            return None
-        }
-    }
-
-    pub fn to_eoi(self) -> Option<()> {
-        if let Self::EndOfInstruction = self {
-            return Some(())
-        } else {
-            return None
-        }
-    }
-}
-
-#[derive(PartialEq, Debug, Clone)]
-pub enum OperationSizeDenotation {
-    Direct,
-    Float,
-    Pointer,
-}
-
-#[derive(PartialEq, Debug, Clone, Copy)]
-pub enum VariableInstruction {
-    STT,
-    SET,
-    LOD,
-    RET,
-    END,
-}
-
-#[derive(PartialEq, Debug, Clone, Copy)]
-pub enum ArithmeticInstruction {
-    ADD,
 }

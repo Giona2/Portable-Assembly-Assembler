@@ -5,7 +5,7 @@ use std::{
 
 use clap::Parser;
 
-use crate::lexer::LexingToken;
+use crate::lexer::tokens::LexingToken;
 
 //mod assembler;
 mod lexer;
@@ -28,7 +28,7 @@ fn main() {
     let file_content: String = fs::read_to_string(cmd_args.target_file_path).unwrap();
 
     // Construct the token stream
-    let token_stream: Vec<lexer::LexingToken> = lexer::generate_lexing_token_stream(Arc::new(file_content));
+    let token_stream: Vec<LexingToken> = lexer::generate_lexing_token_stream(Arc::new(file_content));
     println!("\n\n=== Lexer ===");
     for token in token_stream.clone() {
         print!("{:?} ", token);
