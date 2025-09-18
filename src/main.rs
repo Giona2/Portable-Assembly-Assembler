@@ -9,8 +9,8 @@ use crate::lexer::LexingToken;
 
 //mod assembler;
 mod lexer;
-//mod error;
-//mod syntax_tree;
+mod error;
+mod syntax_tree;
 
 
 #[derive(Parser)]
@@ -29,10 +29,17 @@ fn main() {
 
     // Construct the token stream
     let token_stream: Vec<lexer::LexingToken> = lexer::generate_lexing_token_stream(Arc::new(file_content));
-    for token in token_stream {
+    println!("\n\n=== Lexer ===");
+    for token in token_stream.clone() {
         print!("{:?} ", token);
         if token == LexingToken::EndOfInstruction {
             println!("\n");
         }
+    }
+
+    println!("\n\n=== Syntax Tree ===");
+    let syntax_token_tree = syntax_tree::generate_syntax_tree(&token_stream);
+    for token in syntax_token_tree.clone() {
+        println!("{:?}", token);
     }
 }

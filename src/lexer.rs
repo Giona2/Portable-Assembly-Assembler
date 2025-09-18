@@ -4,19 +4,21 @@ use indexmap::{indexmap, IndexMap};
 use serde::Deserialize;
 
 pub fn get_keywords() -> IndexMap<&'static str, LexingToken> { return indexmap! {
-    "stt" => LexingToken::VariableInstruction(LexingTokenVariableInstruction::STT),
-    "set" => LexingToken::VariableInstruction(LexingTokenVariableInstruction::SET),
-    "lod" => LexingToken::VariableInstruction(LexingTokenVariableInstruction::LOD),
-    "ret" => LexingToken::VariableInstruction(LexingTokenVariableInstruction::RET),
-    "end" => LexingToken::VariableInstruction(LexingTokenVariableInstruction::END),
+    "stt" => LexingToken::VariableInstruction(VariableInstruction::STT),
+    "set" => LexingToken::VariableInstruction(VariableInstruction::SET),
+    "lod" => LexingToken::VariableInstruction(VariableInstruction::LOD),
+    "ret" => LexingToken::VariableInstruction(VariableInstruction::RET),
+    "end" => LexingToken::VariableInstruction(VariableInstruction::END),
+
+    "add" => LexingToken::ArithmeticInstruction(ArithmeticInstruction::ADD),
 
     "," => LexingToken::ArgSeperator,
 
     "\n" => LexingToken::EndOfInstruction,
 
-    "!" => LexingToken::OperatingSizeDenotator(OperatingSizeDenotator::Direct),
-    "f" => LexingToken::OperatingSizeDenotator(OperatingSizeDenotator::Float),
-    "*" => LexingToken::OperatingSizeDenotator(OperatingSizeDenotator::Pointer),
+    "!" => LexingToken::OperatingSizeDenotator(OperationSizeDenotation::Direct),
+    "f" => LexingToken::OperatingSizeDenotator(OperationSizeDenotation::Float),
+    "*" => LexingToken::OperatingSizeDenotator(OperationSizeDenotation::Pointer),
 }}
 
 
@@ -67,25 +69,47 @@ pub fn generate_lexing_token_stream(file_content: Arc<String>) -> Vec<LexingToke
 
 #[derive(PartialEq, Debug, Clone)]
 pub enum LexingToken {
-    VariableInstruction(LexingTokenVariableInstruction),
+    VariableInstruction(VariableInstruction),
+    ArithmeticInstruction(ArithmeticInstruction),
     Number(String),
     ArgSeperator,
     EndOfInstruction,
-    OperatingSizeDenotator(OperatingSizeDenotator)
+    OperatingSizeDenotator(OperationSizeDenotation)
+} impl LexingToken {
+    pub fn to_number(&self) -> Option<String> {
+        if let Self::Number(number) = self {
+            return Some(number.clone())
+        } else {
+            return None
+        }
+    }
+
+    pub fn to_eoi(self) -> Option<()> {
+        if let Self::EndOfInstruction = self {
+            return Some(())
+        } else {
+            return None
+        }
+    }
 }
 
 #[derive(PartialEq, Debug, Clone)]
-pub enum OperatingSizeDenotator {
+pub enum OperationSizeDenotation {
     Direct,
     Float,
     Pointer,
 }
 
 #[derive(PartialEq, Debug, Clone, Copy)]
-pub enum LexingTokenVariableInstruction {
-    STT = 0,
-    SET = 1,
-    LOD = 2,
-    RET = 3,
-    END = 4,
+pub enum VariableInstruction {
+    STT,
+    SET,
+    LOD,
+    RET,
+    END,
+}
+
+#[derive(PartialEq, Debug, Clone, Copy)]
+pub enum ArithmeticInstruction {
+    ADD,
 }
