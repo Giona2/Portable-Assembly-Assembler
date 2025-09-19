@@ -34,6 +34,8 @@ impl ToBinaryRepresentation for syntax_tree::tokens::OperatorConfig {
         if self.is_float   { constructed_value |= IS_FLOAT_MASK   }
         if self.is_direct  { constructed_value |= IS_DIRECT_MASK  }
 
+        println!("operator config binary: {:08b}", constructed_value);
+
         return Vec::from([constructed_value]);
     }
 }

@@ -1,7 +1,4 @@
-use crate::syntax_tree::{
-    self,
-    tokens::OperatorConfig,
-};
+use crate::syntax_tree;
 
 mod helpers;
     use helpers::*;
