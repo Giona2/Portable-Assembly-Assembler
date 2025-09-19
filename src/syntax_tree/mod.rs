@@ -1,5 +1,3 @@
-use std::panic;
-
 use crate::lexer;
 
 pub mod helpers;
@@ -130,8 +128,6 @@ pub fn generate_syntax_tree(lexing_token_stream: &[lexer::tokens::LexingToken]) 
                 let constructed_token = VariableInstruction::END;
                 constructed_syntax_tree.push(SyntaxTreeToken::VariableInstruction(constructed_token));
             }
-
-            _ => {}
         }}
 
         lexer::tokens::LexingToken::ArithmeticInstruction(instruction) => { match instruction {

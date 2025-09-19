@@ -9,7 +9,7 @@ use crate::lexer::tokens::LexingToken;
 
 mod assembler;
 mod lexer;
-mod error;
+//mod error;
 mod syntax_tree;
 
 
@@ -17,6 +17,11 @@ const DEFAULT_OUTPUT_PATH: &str = "./a.pbin";
 
 
 #[derive(Parser)]
+#[command(
+    name = "Portable Assembly Compiler Collection",
+    version = "0.1.1",
+    about = "Collection for Portable Assembly utilities",
+)]
 struct CmdArgs {
     #[arg(index = 1)]
     target_file_path: String,

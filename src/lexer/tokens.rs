@@ -15,6 +15,7 @@ pub enum LexingToken {
         }
     }
 
+    /*
     pub fn to_eoi(self) -> Option<()> {
         if let Self::EndOfInstruction = self {
             return Some(())
@@ -22,6 +23,7 @@ pub enum LexingToken {
             return None
         }
     }
+    */
 }
 
 #[derive(PartialEq, Debug, Clone)]
