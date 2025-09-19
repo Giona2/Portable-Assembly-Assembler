@@ -1,4 +1,4 @@
-use crate::{lexer, syntax_tree};
+use crate::lexer;
 
 pub mod helpers;
     use helpers::*;
