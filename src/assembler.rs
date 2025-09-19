@@ -1,4 +1,7 @@
-use crate::syntax_tree;
+use crate::syntax_tree::{
+    self,
+    tokens::OperatorConfig,
+};
 
 
 pub fn translate_instruction(instruction: &syntax_tree::tokens::SyntaxTreeToken) -> u8 { match instruction {
@@ -23,13 +26,28 @@ pub fn translate_instruction(instruction: &syntax_tree::tokens::SyntaxTreeToken)
 pub fn generate_binary(syntax_tree: &[syntax_tree::tokens::SyntaxTreeToken]) -> Vec<u8> {
     let mut constructed_binary: Vec<u8> = Vec::new();
 
-    for token in syntax_tree { match token {
-        syntax_tree::tokens::SyntaxTreeToken::VariableInstruction(instruction) => {
+    for token in syntax_tree {
+        // Start the instruction
+        constructed_binary.push(translate_instruction(token));
 
+        // Construct the rest of the instruction
+        match token {
+            syntax_tree::tokens::SyntaxTreeToken::VariableInstruction(instruction) => { match instruction {
+                syntax_tree::tokens::VariableInstruction::STT(variable_frame_size) => {
+                    // Add the variable frame size
+                    constructed_binary.append(&mut variable_frame_size.to_le_bytes().to_vec());
+                }
+
+                syntax_tree::tokens::VariableInstruction::SET(operator_config, variable_index, given_value) => {
+                    // Add the operator configuration
+                }
+
+                _ => { unimplemented!() }
+            }}
+
+            _ => { unimplemented!() }
         }
-
-        _ => { unimplemented!() }
-    }}
+    }
 
     return constructed_binary;
 }
