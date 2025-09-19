@@ -23,10 +23,10 @@ const DEFAULT_OUTPUT_PATH: &str = "./a.pbin";
     about = "Collection for Portable Assembly utilities",
 )]
 struct CmdArgs {
-    #[arg(index = 1)]
+    #[arg(index = 1, help = "Input pasm file")]
     target_file_path: String,
 
-    #[arg(long = "out", short = 'o', required = false)]
+    #[arg(long = "out", short = 'o', required = false, help = "Output binary file")]
     target_dir: Option<String>,
 }
 
