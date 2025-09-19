@@ -7,7 +7,7 @@ use clap::Parser;
 
 use crate::lexer::tokens::LexingToken;
 
-//mod assembler;
+mod assembler;
 mod lexer;
 mod error;
 mod syntax_tree;

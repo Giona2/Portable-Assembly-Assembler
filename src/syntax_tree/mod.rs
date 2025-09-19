@@ -2,11 +2,11 @@ use std::panic;
 
 use crate::lexer;
 
-mod helpers;
+pub mod helpers;
     use helpers::*;
-mod tokens;
+pub mod tokens;
     use tokens::*;
-mod types;
+pub mod types;
     use types::*;
 
 
