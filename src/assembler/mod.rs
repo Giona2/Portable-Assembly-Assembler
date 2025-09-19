@@ -42,7 +42,19 @@ pub fn generate_binary(syntax_tree: &[syntax_tree::tokens::SyntaxTreeToken]) -> 
                 }
 
                 syntax_tree::tokens::VariableInstruction::LOD(operator_config, given_value) => {
+                    // Add the operator configuration
+                    constructed_binary.append(&mut operator_config.to_binary_representation());
 
+                    // Add the given value
+                    match given_value {
+                        syntax_tree::tokens::GivenValueType::VariableIndex(variable_index) => {
+                            constructed_binary.append(&mut variable_index.to_binary_representation());
+                        }
+
+                        syntax_tree::tokens::GivenValueType::DirectValue(given_value) => {
+                            constructed_binary.append(&mut given_value.clone());
+                        }
+                    }
                 }
 
                 _ => { unimplemented!() }
