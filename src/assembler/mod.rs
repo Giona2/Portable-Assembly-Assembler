@@ -57,6 +57,14 @@ pub fn generate_binary(syntax_tree: &[syntax_tree::tokens::SyntaxTreeToken]) -> 
                     }
                 }
 
+                syntax_tree::tokens::VariableInstruction::RET(operator_config, variable_index) => {
+                    // Add the operator configuration
+                    constructed_binary.append(&mut operator_config.to_binary_representation());
+
+                    // Add the variable index
+                    constructed_binary.append(&mut variable_index.to_binary_representation());
+                }
+
                 _ => { unimplemented!() }
             }}
 
