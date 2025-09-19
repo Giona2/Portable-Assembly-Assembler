@@ -13,6 +13,9 @@ pub fn get_keywords() -> IndexMap<&'static str, LexingToken> { return indexmap! 
     "end" => LexingToken::VariableInstruction(VariableInstruction::END),
 
     "add" => LexingToken::ArithmeticInstruction(ArithmeticInstruction::ADD),
+    "sub" => LexingToken::ArithmeticInstruction(ArithmeticInstruction::SUB),
+    "mul" => LexingToken::ArithmeticInstruction(ArithmeticInstruction::MUL),
+    "div" => LexingToken::ArithmeticInstruction(ArithmeticInstruction::DIV),
 
     "," => LexingToken::ArgSeperator,
 

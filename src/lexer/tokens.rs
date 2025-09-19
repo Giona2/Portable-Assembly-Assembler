@@ -45,4 +45,7 @@ pub enum VariableInstruction {
 #[derive(PartialEq, Debug, Clone, Copy)]
 pub enum ArithmeticInstruction {
     ADD,
+    SUB,
+    MUL,
+    DIV,
 }

@@ -1,4 +1,4 @@
-use crate::syntax_tree::{self, types::VarFrameType};
+use crate::syntax_tree::{self, tokens::{GivenValueType, OperatorConfig}, types::VarFrameType};
 
 
 pub fn translate_instruction(instruction: &syntax_tree::tokens::SyntaxTreeToken) -> u8 { match instruction {
@@ -16,6 +16,9 @@ pub fn translate_instruction(instruction: &syntax_tree::tokens::SyntaxTreeToken)
 
     syntax_tree::tokens::SyntaxTreeToken::ArithmeticInstruction(instruction) => { match instruction {
         syntax_tree::tokens::ArithmeticInstruction::ADD(_, _) => return 0x0d,
+        syntax_tree::tokens::ArithmeticInstruction::SUB(_, _) => return 0x0e,
+        syntax_tree::tokens::ArithmeticInstruction::MUL(_, _) => return 0x0f,
+        syntax_tree::tokens::ArithmeticInstruction::DIV(_, _) => return 0x10,
     }}
 }}
 
@@ -44,4 +47,17 @@ impl ToBinaryRepresentation for VarFrameType {
     fn to_binary_representation(&self) -> Vec<u8> {
         return self.to_le_bytes().to_vec();
     }
+}
+
+pub trait GetInnerOfArithOrBitwse {
+    fn get_inner(&self) -> (OperatorConfig, GivenValueType);
+}
+
+impl GetInnerOfArithOrBitwse for syntax_tree::tokens::ArithmeticInstruction {
+    fn get_inner(&self) -> (OperatorConfig, GivenValueType) { match self {
+        syntax_tree::tokens::ArithmeticInstruction::ADD(operator_config, given_value) => return (operator_config.clone(), given_value.clone()),
+        syntax_tree::tokens::ArithmeticInstruction::SUB(operator_config, given_value) => return (operator_config.clone(), given_value.clone()),
+        syntax_tree::tokens::ArithmeticInstruction::MUL(operator_config, given_value) => return (operator_config.clone(), given_value.clone()),
+        syntax_tree::tokens::ArithmeticInstruction::DIV(operator_config, given_value) => return (operator_config.clone(), given_value.clone()),
+    }}
 }

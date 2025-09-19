@@ -65,23 +65,23 @@ pub fn generate_binary(syntax_tree: &[syntax_tree::tokens::SyntaxTreeToken]) -> 
                 syntax_tree::tokens::VariableInstruction::END => {}
             }}
 
-            syntax_tree::tokens::SyntaxTreeToken::ArithmeticInstruction(instruction) => { match instruction {
-                syntax_tree::tokens::ArithmeticInstruction::ADD(operator_config, given_value) => {
-                    // Add the operator configuration
-                    constructed_binary.append(&mut operator_config.to_binary_representation());
+            syntax_tree::tokens::SyntaxTreeToken::ArithmeticInstruction(instruction) => {
+                let (operator_config, given_value) = instruction.get_inner();
 
-                    // Add the given value
-                    match given_value {
-                        syntax_tree::tokens::GivenValueType::VariableIndex(variable_index) => {
-                            constructed_binary.append(&mut variable_index.to_binary_representation());
-                        }
+                // Add the operator configuration
+                constructed_binary.append(&mut operator_config.to_binary_representation());
 
-                        syntax_tree::tokens::GivenValueType::DirectValue(given_value) => {
-                            constructed_binary.append(&mut given_value.clone());
-                        }
+                // Add the given value
+                match given_value {
+                    syntax_tree::tokens::GivenValueType::VariableIndex(variable_index) => {
+                        constructed_binary.append(&mut variable_index.to_binary_representation());
+                    }
+
+                    syntax_tree::tokens::GivenValueType::DirectValue(given_value) => {
+                        constructed_binary.append(&mut given_value.clone());
                     }
                 }
-            }}
+            }
         }
     }
 

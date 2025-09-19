@@ -20,6 +20,9 @@ pub enum VariableInstruction {
 #[derive(Debug, Clone)]
 pub enum ArithmeticInstruction {
     ADD(OperatorConfig, GivenValueType),
+    SUB(OperatorConfig, GivenValueType),
+    MUL(OperatorConfig, GivenValueType),
+    DIV(OperatorConfig, GivenValueType),
 }
 
 #[derive(Debug, Clone, Copy)]
