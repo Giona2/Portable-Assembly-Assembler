@@ -65,7 +65,7 @@ pub fn generate_binary(syntax_tree: &[syntax_tree::tokens::SyntaxTreeToken]) -> 
                     constructed_binary.append(&mut variable_index.to_binary_representation());
                 }
 
-                _ => { unimplemented!() }
+                syntax_tree::tokens::VariableInstruction::END => {}
             }}
 
             _ => { unimplemented!() }
