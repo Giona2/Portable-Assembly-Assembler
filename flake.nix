@@ -10,20 +10,19 @@
       system = "x86_64-linux";
       pkgs = import nixpkgs { inherit system; };
     in {
-    	packages.${system}.default = pkgs.stdenv.mkDerivation {
+    	packages.${system}.default = pkgs.rustPlatform.buildRustPackage {
         pname = "pacc";
         version = "0.1.2";
-
         src = ./.;
+
+        cargoHash = "";
 
         buildInputs = with pkgs; [
         	pkg-config
-          cargo
-          rustc
         ];
 
         buildPhase = ''
-        	cargo build --release --offline
+        	cargo build --release
         '';
 
         installPhase = ''
