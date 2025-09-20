@@ -10,12 +10,12 @@
       system = "x86_64-linux";
       pkgs = import nixpkgs { inherit system; };
     in {
-    	packages.${system}.default = pkgs.rustPlatform.buildRustPackage {
+    	packages.${system}.pacc = pkgs.rustPlatform.buildRustPackage {
         pname = "pacc";
         version = "0.1.2";
         src = ./.;
 
-        cargoHash = "";
+        cargoHash = "sha256-gscx9fFZdFXqW+xBCWMhLRTvFnX8yelKloVygazPUKE=";
 
         buildInputs = with pkgs; [
         	pkg-config
