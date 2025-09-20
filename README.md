@@ -7,7 +7,7 @@
 * [Future Plans](#future-plans)
 
 # Description
-This project will eventually hold both the Unimal compiler and the portable assembly assembler, but for now it just holds the portable assembly interpreter
+This project will eventually hold both the Unimal compiler and the portable assembly assembler, but for now it just holds the Portable Assembly Assembler 
 
 # Getting Started
 ## Starting File
