@@ -1,8 +1,8 @@
 # Table of Contents
 * [Description](#description)
 * [Getting Started](#getting-started)
-	* [Starting File](#getting-started#starting-file)
-	* [Compilation](#getting-started#compilation)
+	* [Starting File](#getting-started##starting-file)
+	* [Compilation](#getting-started##compilation)
 * [More Resources](#more-resources)
 * [Future Plans](#future-plans)
 
