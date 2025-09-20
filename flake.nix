@@ -28,7 +28,7 @@
 
         installPhase = ''
         	mkdir -p $out/bin
-         	cp target/release/* $out/bin
+         	cp -r target/release/* $out/bin
         '';
      	};
     };
