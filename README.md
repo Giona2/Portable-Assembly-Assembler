@@ -1,5 +1,10 @@
 # Table of Contents
-
+* [Description](#description)
+* [Getting Started](#getting-started)
+	* [Starting File](#getting-started#starting-file)
+	* [Compilation](#getting-started#compilation)
+* [More Resources](#more-resources)
+* [Future Plans](#future-plans)
 
 # Description
 This project will eventually hold both the Unimal compiler and the portable assembly assembler, but for now it just holds the portable assembly interpreter
