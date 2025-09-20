@@ -23,7 +23,7 @@
         ];
 
         buildPhase = ''
-        	cargo build --release
+        	cargo build --release --offline
         '';
 
         installPhase = ''
